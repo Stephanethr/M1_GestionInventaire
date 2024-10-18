@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventaire</title>
+    <!-- Inclusion de Tailwind CSS pour le style -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-xl font-bold mb-4">Gestion de l'inventaire</h1>
+        <!-- Lien pour ajouter un nouvel objet -->
+        <a href="{{ url_for('add_item') }}" class="text-blue-500 hover:underline mb-4 inline-block">Ajouter un nouvel objet</a>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul class="mb-4">
+              {% for category, message in messages %}
+                <!-- Affichage des messages flash -->
+                <li class="text-sm {{ category }} bg-gray-200 p-2 rounded mb-1">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        
+        <table class="min-w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-300 p-2 text-left">Nom</th> <!-- Colonne pour le nom -->
+                    <th class="border border-gray-300 p-2 text-left">Type</th> <!-- Colonne pour le type -->
+                    <th class="border border-gray-300 p-2 text-left">Quantité</th> <!-- Colonne pour la quantité -->
+                    <th class="border border-gray-300 p-2 text-left">Actions</th> <!-- Colonne pour les actions -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr class="hover:bg-gray-100">
+                        <td class="border border-gray-300 p-2">{{ item.item_name }}</td> <!-- Nom de l'objet -->
+                        <td class="border border-gray-300 p-2">{{ item.item_type }}</td> <!-- Type de l'objet -->
+                        <td class="border border-gray-300 p-2">{{ item.item_quantity }}</td> <!-- Quantité de l'objet -->
+                        <td class="border border-gray-300 p-2">
+                            <!-- Formulaire pour consommer l'objet -->
+                            <form action="{{ url_for('consume_item', item_id=item.item_id) }}" method="post" style="display:inline;">
+                                <button type="submit" class="bg-green-500 text-white rounded-md px-2 py-1 hover:bg-green-600">Consommer</button>
+                            </form>
+                            <!-- Formulaire pour modifier l'objet -->
+                            <form action="{{ url_for('edit_item', item_id=item.item_id) }}" method="get" style="display:inline;">
+                                <button type="submit" class="bg-yellow-500 text-white rounded-md px-2 py-1 hover:bg-yellow-600">Modifier</button>
+                            </form>
+                            <!-- Formulaire pour supprimer l'objet -->
+                            <form action="{{ url_for('delete_item', item_id=item.item_id) }}" method="post" style="display:inline;">
+                                <button type="submit" class="bg-red-500 text-white rounded-md px-2 py-1 hover:bg-red-600">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
