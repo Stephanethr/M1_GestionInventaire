@@ -53,12 +53,12 @@ def add_item():
 
         # Validation des champs obligatoires
         if not name or not type_id or not quantity:
-            flash('Tous les champs sont obligatoires!', 'danger')
+            flash('Tous les champs sont obligatoires !', 'danger')
             return redirect(url_for('add_item'))
         
         # Validation de la quantité
         if not quantity.isdigit() or int(quantity) < 0:
-            flash('La quantité doit être un nombre positif!', 'danger')
+            flash('La quantité doit être un nombre positif !', 'danger')
             return redirect(url_for('add_item'))
         
         # Validation du type d'objet
@@ -105,18 +105,18 @@ def edit_item(item_id):
 
         # Validation des champs obligatoires
         if not name or not type_id or not quantity:
-            flash('Tous les champs sont obligatoires!', 'danger')
+            flash('Tous les champs sont obligatoires !', 'danger')
             # Rendre le template avec les données de l'objet et les types
             return render_template('edit_item.html', action='Modifier', item=item, item_types=item_types)
         
         # Validation de la quantité
         if not quantity.isdigit() or int(quantity) < 0:
-            flash('La quantité doit être un nombre positif!', 'danger')
+            flash('La quantité doit être un nombre positif !', 'danger')
             return render_template('edit_item.html', action='Modifier', item=item, item_types=item_types)
         
         # Validation du type d'objet
         if not type_id.isdigit() or int(type_id) < 1:
-            flash('Type d\'objet invalide!', 'danger')
+            flash('Type d\'objet invalide !', 'danger')
             return render_template('edit_item.html', action='Modifier', item=item, item_types=item_types)
         
         # Mettre à jour l'objet dans la base de données
@@ -125,7 +125,7 @@ def edit_item(item_id):
         mysql.connection.commit()  # Valider la transaction
         cursor.close()
         
-        flash('Objet modifié avec succès!', 'success')  # Message de succès
+        flash('Objet modifié avec succès !', 'success')  # Message de succès
         return redirect(url_for('index'))  # Rediriger vers la page d'inventaire
     
     cursor.close()  # Fermer le curseur
@@ -140,7 +140,7 @@ def delete_item(item_id):
     mysql.connection.commit()  # Valider la transaction
     cursor.close()
     
-    flash('Objet supprimé avec succès!', 'success')  # Message de succès
+    flash('Objet supprimé avec succès !', 'success')  # Message de succès
     return redirect(url_for('index'))  # Rediriger vers la page d'inventaire
 
 # Route pour consommer un objet
@@ -157,7 +157,7 @@ def consume_item(item_id):
         new_quantity = item['quantity'] - 1  # Décrémenter la quantité
         cursor.execute('UPDATE inventory SET quantity = %s WHERE id = %s', (new_quantity, item_id))
         mysql.connection.commit()  # Valider la transaction
-        flash('Objet consommé avec succès!', 'success')  # Message de succès
+        flash('Objet consommé avec succès !', 'success')  # Message de succès
     else:
         flash('Quantité insuffisante !', 'danger')  # Message d'erreur si la quantité est insuffisante
     
