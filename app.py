@@ -150,6 +150,47 @@ def delete_item(item_id):
     return redirect(url_for('index'))
 
 
+@app.route('/edit/<int:item_id>', methods=['GET', 'POST'])
+def edit_item(item_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Récupérer l'élément à modifier
+    cursor.execute('SELECT * FROM inventory WHERE id = ?', (item_id,))
+    item = cursor.fetchone()
+
+    if not item:
+        flash('Objet non trouvé !', 'danger')
+        return redirect(url_for('index'))
+
+    cursor.execute('SELECT * FROM item_types')
+    item_types = cursor.fetchall()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        type_id = request.form['type_id']
+        quantity = request.form['quantity']
+
+        # Validation des champs
+        if not name or not type_id or not quantity:
+            flash('Tous les champs sont obligatoires !', 'danger')
+            return render_template('edit_item.html', action='Modifier', item=item, item_types=item_types)
+
+        # Mise à jour de l'élément
+        cursor.execute('UPDATE inventory SET name = ?, type_id = ?, quantity = ? WHERE id = ?',
+                       (name, type_id, quantity, item_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        flash('Objet modifié avec succès !', 'success')
+        return redirect(url_for('index'))
+
+    cursor.close()
+    conn.close()
+    return render_template('edit_item.html', action='Modifier', item=item, item_types=item_types)
+
+
 # Exécuter l'application Flask
 if __name__ == '__main__':
     init_db()  # Créer la base de données et les tables si elles n'existent pas
