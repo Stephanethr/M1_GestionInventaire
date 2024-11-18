@@ -24,5 +24,6 @@
 
 4. Lancer le fichier
     ```bash
+    flask init-db
     python app.py
     ```

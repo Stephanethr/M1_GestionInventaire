@@ -1,4 +1,6 @@
 Flask
 python-dotenv
+flask-bcrypt
 Flask-MySQLdb
-MySQL-python
+mysqlclient
+
