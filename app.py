@@ -127,6 +127,12 @@ def inventory():
 
     conn = get_db_connection()
     cursor = conn.cursor()
+
+    # Récupérer les informations de l'utilisateur connecté
+    cursor.execute('SELECT user_login FROM user WHERE user_id = ?', (session['user_id'],))
+    user = cursor.fetchone()
+    username = user['user_login'] if user else 'Utilisateur'
+
     # Récupérer les items de l'inventaire de l'utilisateur connecté
     cursor.execute('''
         SELECT inventory.id AS item_id, inventory.name AS item_name, 
@@ -139,7 +145,7 @@ def inventory():
     cursor.close()
     conn.close()
 
-    return render_template('inventory.html', items=items)
+    return render_template('inventory.html', items=items, username=username)
 
 @app.route('/add_item', methods=['GET', 'POST'])
 def add_item():
