@@ -176,6 +176,26 @@ def add_item():
     conn.close()
     return render_template('edit_item.html', action='Ajouter', item=None, item_types=item_types)
 
+
+@app.route('/delete/<int:item_id>', methods=['POST'])
+def delete_item(item_id):
+    if 'loggedin' not in session:
+        flash('Veuillez vous connecter.', 'danger')
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Supprimer l'objet avec l'ID donné
+    cursor.execute('DELETE FROM inventory WHERE id = ?', (item_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    flash('Objet supprimé avec succès !', 'success')
+    return redirect(url_for('inventory'))
+
+
 @app.route('/consume/<int:item_id>', methods=['POST'])
 def consume_item(item_id):
     if 'loggedin' not in session:
